@@ -87,6 +87,10 @@ $ sparser -h
 
 *Note*: You should take a look at the variety of `Presenters`. Try the `JSONL` for instance.
 
+### Usage bonus
+
+[![asciicast](https://asciinema.org/a/bs9adjgKAVeEmcjfFsExdcgg1.svg)](https://asciinema.org/a/bs9adjgKAVeEmcjfFsExdcgg1)
+
 ### Using as library
 
 This is the second way to use the gem. You can just require (`require 'smart_parser'`) and starts using the classes like:
