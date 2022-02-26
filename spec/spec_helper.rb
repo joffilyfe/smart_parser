@@ -24,3 +24,7 @@ RSpec.configure do |config|
     FactoryBot.find_definitions
   end
 end
+
+def random_ipv4
+  [rand(1..204), rand(10..20), rand(1..10), rand(0..255)].join('.')
+end
