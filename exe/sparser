@@ -1,0 +1,77 @@
+#!/usr/bin/env ruby
+
+# frozen_string_literal: true
+
+require 'optparse'
+
+if $PROGRAM_NAME == __FILE__
+  require_relative '../lib/smart_parser'
+else
+  require 'smart_parser'
+end
+require 'benchmark'
+
+USAGE = "Usage: sparser webserver.log [options]"
+
+def parse_options
+  counters = {
+    mostvisited: SmartParser::Counters::MostVisitedCounter,
+    uniqvisitors: SmartParser::Counters::UniqVisitorsCounter
+  }
+  presenters = {
+    table: SmartParser::Presenters::TablePresenter,
+    line: SmartParser::Presenters::LinePresenter,
+    jsonl: SmartParser::Presenters::JSONLPresenter,
+    none: nil
+  }
+  options = {
+    counters: [SmartParser::Counters::MostVisitedCounter, SmartParser::Counters::UniqVisitorsCounter],
+    presenter: SmartParser::Presenters::TablePresenter,
+    benchmark: false
+  }
+
+  OptionParser.new do |opts|
+    opts.banner = USAGE
+    opts.on('-c', '--use c1,c2', Array, "Select available counters: (#{counters.keys.join(', ')})") do |selected|
+      unless selected.empty?
+        options[:counters] = selected.select { |c| counters.keys.include?(c.to_sym) }
+        options[:counters] = options[:counters].map { |c| counters[c.to_sym] }.flatten
+      end
+    end
+    opts.on('-p PRESENTER', '--presenter', presenters,
+            "Select the output presenter: (#{presenters.keys.join(', ')})") do |presenter|
+      options[:presenter] = presenter
+    end
+    opts.on('-b', '--benchmark', 'Print the benchmark for the script') do |bench|
+      options[:benchmark] = bench
+    end
+  end.parse!
+
+  options
+end
+
+def main
+  options = parse_options
+  logfile = File.open(ARGV[0] || abort(USAGE))
+
+  parser = SmartParser::Parser.new(
+    lines: logfile.readlines,
+    counters: options[:counters].map(&:new),
+    presenter: options[:presenter]
+  )
+
+  time = Benchmark.measure do
+    parser.parse!
+  end
+
+  parser.present
+  puts time if options[:benchmark]
+rescue Errno::ENOENT
+  abort("File '#{ARGV[0]}' not found, please check if the path exists.")
+rescue Errno::EISDIR
+  abort("The path '#{ARGV[0]}' is a directory, please use files only.")
+rescue OptionParser::InvalidArgument, OptionParser::MissingArgument => e
+  abort(e.message)
+end
+
+main
