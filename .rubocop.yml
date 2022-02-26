@@ -1,0 +1,12 @@
+AllCops:
+  NewCops: enable
+  Exclude:
+    - bin/**/*
+    - exe/*
+    - Gemfile
+  DisplayCopNames: true
+  TargetRubyVersion: 2.7
+  SuggestExtensions: false
+
+Metrics/BlockLength:
+  Enabled: false
