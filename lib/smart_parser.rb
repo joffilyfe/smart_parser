@@ -9,10 +9,10 @@ require_relative 'smart_parser/presenters/table_presenter'
 require_relative 'smart_parser/presenters/jsonl_presenter'
 
 module SmartParser
-  # Regex to search for data separeted by a space
+  # Regex to search for data separated by a space
   LINE_REGEX = /(?<path>.*)\s+(?<address>.*)$/.freeze
 
-  # By defaul the MostVisitedCounter and UniqVisitorsCounter
+  # By default the MostVisitedCounter and UniqVisitorsCounter
   # will be used to parse lines.
   DEFAULT_COUNTERS = [
     Counters::MostVisitedCounter.new,
@@ -34,7 +34,7 @@ module SmartParser
   # ==== Attributes
   # +lines+ - An Array containing strings to be parsed
   # +counters+ - An Array containing zero or many Counter's.
-  # +presenter+ - A Presenter which will displays the parser result.
+  # +presenter+ - A Presenter which will be used to displays the parser result.
   #
   # ==== Examples
   # # Creates a new Parser with only one Counter and with JSONLPresenter
@@ -43,7 +43,7 @@ module SmartParser
   #      counters: [SmartParser::Counters::UniqVisitorsCounter]
   #      presenter: SmartParser::Presenters::JSONLPresenter
   # )
-  # # Now you should parse! and show your results
+  # # Now you should parse! and show the results
   # p.parse!
   # p.present
   #

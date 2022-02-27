@@ -2,7 +2,7 @@
 
 module SmartParser
   module Counters
-    # This is a super class which difines what other counters
+    # This is a super class which defines what other counters
     # must implements. Every counter which inherance from this
     # class will use the Hash as data container to store information
     # about parsed lines.
